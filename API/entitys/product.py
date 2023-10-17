@@ -1,8 +1,7 @@
 class Product():
-    def __init__(self, product_name, description, image, quantity, regular_price):
+    def __init__(self, product_name, description, quantity, regular_price):
         self.__product_name = product_name
         self.__description = description
-        self.__image = image
         self.__quantity = quantity
         self.__regular_price = regular_price
 
@@ -22,14 +21,7 @@ class Product():
     def description(self, description):
         self.__description = description
     
-    @property
-    def image(self):
-        return self.__image
-    
-    @image.setter
-    def image(self, image):
-        self.__image = image
-    
+
     @property
     def quantity(self):
         return self.__quantity
