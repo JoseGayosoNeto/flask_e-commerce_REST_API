@@ -15,3 +15,6 @@ def list_all_products():
     products = product_model.Product.query.all()
     return products
 
+def list_product_by_id(id):
+    product = product_model.Product.query.filter_by(id=id).first()
+    return product
