@@ -31,5 +31,20 @@ class ProductsList(Resource):
             app.logger.info(f"Product '{product_name}' registered")
             return make_response(aux, 201)
             
+class ProductDetails(Resource):
+    def get(self, id):
+        product = product_service.list_product_by_id(id)
+        if product is None:
+            return make_response(jsonify("Product doesnt exist."), 404)
+        ps = product_schema.ProductSchema()
+        return make_response(ps.jsonify(product), 200)
+
+    def put(self, id):
+        pass
+
+    def delete(self, id):
+        pass
+
 
 api.add_resource(ProductsList, '/products')
+api.add_resource(ProductDetails, '/products/<int:id>')
