@@ -7,7 +7,6 @@ DEBUG = True
 SECRET_KEY = os.environ.get('SECRET_KEY')
 MAX_CONTENT_LENGTH = int(eval(os.environ.get('MAX_CONTENT_LENGTH')))
 CACHE_TYPE = os.environ.get('CACHE_TYPE')
-UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER')
 
 
 
