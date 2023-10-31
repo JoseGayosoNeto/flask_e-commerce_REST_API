@@ -21,13 +21,10 @@ migrate = Migrate(app, db)
 
 api = Api(app)
 
-# Adicionando log em um arquivo
+
 log_file = 'app.log'
-log_formatter = formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler = RotatingFileHandler(log_file, maxBytes= 1024*1024*8,backupCount=5)
-file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(log_formatter)
-app.logger.addHandler(file_handler)
+logging.basicConfig(filename=log_file, format='%(asctime)s - %(levelname)s - %(threadName)s - %(message)s', level=logging.DEBUG)
+
 
 from .views import product_views
 from .models import product_model
