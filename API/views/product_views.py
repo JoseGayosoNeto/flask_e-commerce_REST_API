@@ -35,15 +35,40 @@ class ProductDetails(Resource):
     def get(self, id):
         product = product_service.list_product_by_id(id)
         if product is None:
-            return make_response(jsonify("Product doesnt exist."), 404)
+            return make_response(jsonify("Product doesn't exist."), 404)
         ps = product_schema.ProductSchema()
         return make_response(ps.jsonify(product), 200)
 
     def put(self, id):
-        pass
+        old_product = product_service.list_product_by_id(id)
+        if old_product is None:
+            return make_response(jsonify("Product doesn't exist"), 404)
+        ps = product_schema.ProductSchema()
+        validate = ps.validate(request.json)
+        if validate:
+            return make_response(jsonify(validate), 400)
+        else:
+            product_name = request.json['product_name']
+            description = request.json['description']
+            quantity = request.json['quantity']
+            regular_price = request.json['regular_price']
+
+            new_product = product.Product(product_name=product_name,description=description,
+                                            quantity=quantity,regular_price=regular_price)
+
+            product_service.update_product(old_product, new_product)
+            updated_product = product_service.list_product_by_id(id)
+            return make_response(ps.jsonify(updated_product), 200)
+            
 
     def delete(self, id):
-        pass
+        product = product_service.list_product_by_id(id)
+        if product is None:
+            return make_response(jsonify("Product doesn't exist"), 404)
+        else:
+            product_service.remove_product(product)
+            return make_response(jsonify(f"Product '{product.product_name}' sucessfully removed"), 200)
+
 
 
 api.add_resource(ProductsList, '/products')

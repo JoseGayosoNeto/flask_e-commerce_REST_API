@@ -18,3 +18,14 @@ def list_all_products():
 def list_product_by_id(id):
     product = product_model.Product.query.filter_by(id=id).first()
     return product
+
+def update_product(old_product, new_product):
+    old_product.product_name = new_product.product_name
+    old_product.description = new_product.description
+    old_product.quantity = new_product.quantity
+    old_product.regular_price = new_product.regular_price
+    db.session.commit()
+
+def remove_product(product):
+    db.session.delete(product)
+    db.session.commit()
