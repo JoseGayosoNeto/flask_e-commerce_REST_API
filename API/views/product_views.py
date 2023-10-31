@@ -15,7 +15,6 @@ class ProductsList(Resource):
         ps = product_schema.ProductSchema()
         validate = ps.validate(request.json) # Performs the validation of data made in schema
         if validate:
-            app.logger.info("Validation Error")
             return make_response(jsonify(validate), 400)
         else:
             product_name = request.json['product_name']
