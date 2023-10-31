@@ -9,7 +9,6 @@ class ProductsList(Resource):
     def get(self):
         products = product_service.list_all_products()
         ps = product_schema.ProductSchema(many=True)
-        app.logger.info("Listed all products")
         return make_response(ps.jsonify(products), 200)
 
     def post(self):
@@ -28,7 +27,6 @@ class ProductsList(Resource):
                                             quantity=quantity,regular_price=regular_price)
             result = product_service.register_product(new_product)
             aux = ps.jsonify(result)
-            app.logger.info(f"Product '{product_name}' registered")
             return make_response(aux, 201)
             
 class ProductDetails(Resource):
