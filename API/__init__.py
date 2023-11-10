@@ -26,5 +26,5 @@ log_file = 'app.log'
 logging.basicConfig(filename=log_file, format='%(asctime)s - %(levelname)s - %(threadName)s - %(message)s', level=logging.DEBUG)
 
 
-from .views import product_views
-from .models import product_model
+from .views import product_views, cart_views, user_views
+from .models import product_model, cart_model, user_model
