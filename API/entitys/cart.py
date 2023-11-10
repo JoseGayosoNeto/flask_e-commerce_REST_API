@@ -1,8 +1,17 @@
 class Cart():
-    def __init__(self,product_id,quantity):
+    def __init__(self,product_id,quantity,user_id):
+        self.__user_id = user_id
         self.__product_id = product_id
         self.__quantity = quantity
     
+    @property
+    def user_id(self):
+        return self.__user_id
+    
+    @user_id.setter
+    def user_id(self,user_id):
+        self.__user_id = user_id
+
     @property
     def product_id(self):
         return self.__product_id
