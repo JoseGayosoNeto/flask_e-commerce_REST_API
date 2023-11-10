@@ -6,6 +6,6 @@ class Product(db.Model):
     description = db.Column(db.String(100), nullable=False) 
     quantity = db.Column(db.Integer,nullable=False)
     regular_price = db.Column(db.Float, nullable=False)
-
+    
     def __repr__(self):
         return f"Product('{self.id}', '{self.product_name}', '{self.description}', '{self.quantity}','{self.regular_price}')"
