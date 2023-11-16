@@ -32,7 +32,7 @@ class ManageCart(Resource):
                 storage = int(product.quantity)
                 if not storage:
                     return make_response(jsonify("Out of storage"), 400)
-                item = cart_model.Cart.query.filter_by(product_id=product_id).first()
+                item = cart_model.Cart.query.filter_by(product_id=product_id,user_id=user_id).first()
                 if item: 
                     # Item with quantity = 0 in cart -> Remove item from cart
                     if not quantity:
@@ -70,10 +70,12 @@ class ManageCart(Resource):
 
                     return make_response(aux,201)
                 
-                else: # Item doesn't exist in cart but your quantity is invalid
+                else: # Item doesn't exist in cart
+                    # Your quantity is invalid
                     if not quantity:
                         return make_response(jsonify('Quantity invalid'), 400)
                     
+                    # Product quantity in cart < 0
                     if quantity < 0:
                         return make_response(jsonify("There is no quantity of this product in the cart"), 400)
 

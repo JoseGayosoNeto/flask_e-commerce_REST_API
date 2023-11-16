@@ -12,7 +12,6 @@ class UserList(Resource):
         us = user_schema.UserSchema(many=True)
         return make_response(us.jsonify(all_users), 200)
         
-    #Admin only
     def post(self):
         us = user_schema.UserSchema()
         validate = us.validate(request.json)
