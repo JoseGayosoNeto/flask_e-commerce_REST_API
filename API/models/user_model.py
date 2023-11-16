@@ -9,7 +9,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     address = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False)
-
+    cart = db.relationship("Cart", back_populates="cart_user", cascade="all,delete-orphan")
 
     def encrypt_password(self):
         self.password = pbkdf2_sha256.hash(self.password)
