@@ -25,14 +25,16 @@ class ManageCart(Resource):
             product_id = request.json['product_id']
             quantity = request.json['quantity']
 
-            product = product_model.Product.query.filter_by(id=product_id).first()
+            #product = product_model.Product.query.filter_by(id=product_id).first()
+            product = product_service.list_product_by_id(product_id)
             if product is None:
                 return make_response(jsonify("Product doesn't exist"), 404)
             else:
                 storage = int(product.quantity)
                 if not storage:
                     return make_response(jsonify("Out of storage"), 400)
-                item = cart_model.Cart.query.filter_by(product_id=product_id,user_id=user_id).first()
+                item = cart_service.search_product_in_cart(user_id=user_id,product_id=product_id)
+                # Item already exists in cart
                 if item: 
                     # Item with quantity = 0 in cart -> Remove item from cart
                     if not quantity:
@@ -46,7 +48,7 @@ class ManageCart(Resource):
                                                     
                         product_service.update_product(storage_product,new_storage_product)
 
-                        return make_response(jsonify("Item has been removed"), 200)
+                        return make_response(jsonify(f"Item '{storage_product.product_name}' has been removed from cart"), 200)
 
                     # If item already exists in cart, just update his values on the db
                     # Adds more quantity of a item in cart and reduce it in storage 
@@ -60,7 +62,7 @@ class ManageCart(Resource):
                                         regular_price=old_product.regular_price)
 
                     if new_product.quantity < 0:
-                        return make_response(jsonify("Quantity of the product in the cart exceeded the quantity in stock"), 400)
+                        return make_response(jsonify(f"Quantity of the product '{new_product.product_name}' in the cart exceeded the quantity in stock"), 400)
 
                     product_service.update_product(old_product,new_product)
 
@@ -78,7 +80,7 @@ class ManageCart(Resource):
                     # Product quantity in cart < 0
                     if quantity < 0:
                         return make_response(jsonify("There is no quantity of this product in the cart"), 400)
-
+                    # Adding a new product to the user cart
                     item = cart.Cart(user_id=user_id,product_id=product_id,quantity=quantity)
 
                     if quantity > storage:
@@ -91,7 +93,10 @@ class ManageCart(Resource):
                     new_product = Product(product_name=old_product.product_name,description=old_product.description,
                                         quantity=old_product.quantity-item.quantity,regular_price=old_product.regular_price)
                     product_service.update_product(old_product,new_product)
-                    aux = cs.jsonify(result)
+
+                    cs = cart_schema.CartSchema(many=True)
+                    user_cart = cart_service.list_cart_by_user(id=user_id)
+                    aux = cs.jsonify(user_cart)
                     return make_response(aux, 201)
 
 
