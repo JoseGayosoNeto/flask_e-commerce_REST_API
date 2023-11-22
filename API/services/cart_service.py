@@ -18,3 +18,7 @@ def insert_new_product_cart(product):
 def update_cart_product_quantity(product, quantity):
     product.quantity += quantity
     db.session.commit()
+
+def search_product_in_cart(user_id,product_id):
+    cart = cart_model.Cart.query.filter_by(product_id=product_id,user_id=user_id).first()
+    return cart
