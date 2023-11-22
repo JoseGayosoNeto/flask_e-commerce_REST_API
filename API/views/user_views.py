@@ -2,15 +2,17 @@ from API import api
 from ..entitys import user
 from ..schemas import user_schema
 from ..services import user_service
+from ..models.user_model import User
 from flask_restful import Resource
 from flask import make_response,jsonify,request
+from ..paginate import paginate
 
 class UserList(Resource):
     # Only for users that have is_admin = True
     def get(self):
         all_users = user_service.list_all_users()
         us = user_schema.UserSchema(many=True)
-        return make_response(us.jsonify(all_users), 200)
+        return paginate(User, us)
         
     def post(self):
         us = user_schema.UserSchema()
@@ -50,7 +52,7 @@ class UserDetails_by_email(Resource):
     def get(self,email):
         user = user_service.list_user_by_email(email)
         us = user_schema.UserSchema()
-        return make_response(us.jsonify(user), 200)
+        return paginate(User, us)
 
 api.add_resource(UserList,'/user')
 api.add_resource(UserDetails_by_id, '/user/<int:id>')

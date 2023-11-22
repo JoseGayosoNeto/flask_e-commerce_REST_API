@@ -3,13 +3,16 @@ from API import api,app
 from ..schemas import product_schema
 from ..entitys import product
 from ..services import product_service
+from ..models.product_model import Product
 from flask import request, make_response, jsonify
 import os
+from ..paginate import paginate
+
 class ProductsList(Resource):
     def get(self):
         products = product_service.list_all_products()
         ps = product_schema.ProductSchema(many=True)
-        return make_response(ps.jsonify(products), 200)
+        return paginate(Product, ps)
 
     def post(self):
         ps = product_schema.ProductSchema()

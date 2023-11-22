@@ -3,16 +3,17 @@ from ..entitys import cart
 from ..entitys.product import Product
 from ..schemas import cart_schema
 from ..services import cart_service, product_service
-from ..models import product_model, cart_model
+from ..models.cart_model import Cart
 from API import api,app
 from flask import make_response, jsonify, request
+from ..paginate import paginate
 
 class ManageDetails(Resource):
 
     def get(self,id): # Get user cart by id
         user_cart = cart_service.list_cart_by_user(id)
         cs = cart_schema.CartSchema(many=True)
-        return make_response(cs.jsonify(user_cart), 200)
+        return paginate(Cart, cs)
 
 class ManageCart(Resource):
     def post(self):
@@ -25,7 +26,6 @@ class ManageCart(Resource):
             product_id = request.json['product_id']
             quantity = request.json['quantity']
 
-            #product = product_model.Product.query.filter_by(id=product_id).first()
             product = product_service.list_product_by_id(product_id)
             if product is None:
                 return make_response(jsonify("Product doesn't exist"), 404)
