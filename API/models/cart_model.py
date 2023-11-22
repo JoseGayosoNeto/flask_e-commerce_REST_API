@@ -6,6 +6,7 @@ class Cart(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     cart_user = db.relationship("User", back_populates="cart")
+    product = db.relationship("Product", backref="carts")
 
     def __repr__(self,product_id,quantity,user_id):
         return f"Item('{self.product_id}', '{self.quantity}', User_id: '{self.user_id}')"
