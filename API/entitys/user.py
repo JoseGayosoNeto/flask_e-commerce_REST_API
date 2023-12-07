@@ -5,6 +5,7 @@ class User():
         self.__password = password
         self.__address = address
         self.__is_admin = is_admin
+        self.__user_balance = 0.00
     
     @property
     def name(self):
@@ -37,6 +38,14 @@ class User():
     @address.setter
     def address(self, address):
         self.__address = address
+    
+    @property
+    def user_balance(self):
+        return self.__user_balance
+
+    @user_balance.setter
+    def user_balance(self, user_balance):
+        self.__user_balance = user_balance
 
     @property
     def is_admin(self):
