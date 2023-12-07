@@ -52,7 +52,7 @@ class UserDetails_by_email(Resource):
     def get(self,email):
         user = user_service.list_user_by_email(email)
         us = user_schema.UserSchema()
-        return paginate(User, us)
+        return make_response(us.jsonify(user), 200)
 
 api.add_resource(UserList,'/user')
 api.add_resource(UserDetails_by_id, '/user/<int:id>')
