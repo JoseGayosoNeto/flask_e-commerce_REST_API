@@ -8,6 +8,7 @@ class User(db.Model):
     email = db.Column(db.String(200), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
     address = db.Column(db.String(100), nullable=False)
+    user_balance = db.Column(db.Numeric(precision=10,scale=2),nullable=False)
     is_admin = db.Column(db.Boolean, nullable=False)
     cart = db.relationship("Cart", back_populates="cart_user", cascade="all,delete-orphan")
 
@@ -18,5 +19,5 @@ class User(db.Model):
         return pbkdf2_sha256.verify(password,self.password)
 
     def __repr__(self,name,email,address,is_admin):
-        return f"User('{self.name}', '{self.email}', '{self.address}' is_admin:'{self.is_admin}')"
+        return f"User('{self.name}', '{self.email}', '{self.address}', '{self.user_balance}', is_admin:'{self.is_admin}')"
 
