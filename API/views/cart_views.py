@@ -13,7 +13,7 @@ class ManageDetails(Resource):
     def get(self,id): # Get user cart by id
         user_cart = cart_service.list_cart_by_user(id)
         cs = cart_schema.CartSchema(many=True)
-        return paginate(Cart, cs)
+        return make_response(cs.jsonify(user_cart), 200)
 
 class ManageCart(Resource):
     def post(self):
@@ -65,6 +65,7 @@ class ManageCart(Resource):
                         return make_response(jsonify(f"Quantity of the product '{new_product.product_name}' in the cart exceeded the quantity in stock"), 400)
 
                     product_service.update_product(old_product,new_product)
+                    cart_service.update_item_value(item)
 
                     cs = cart_schema.CartSchema(many=True)
                     result = cart_service.list_cart_by_user(user_id)
@@ -93,6 +94,7 @@ class ManageCart(Resource):
                     new_product = Product(product_name=old_product.product_name,description=old_product.description,
                                         quantity=old_product.quantity-item.quantity,regular_price=old_product.regular_price)
                     product_service.update_product(old_product,new_product)
+                    cart_service.update_item_value(item)
 
                     cs = cart_schema.CartSchema(many=True)
                     user_cart = cart_service.list_cart_by_user(id=user_id)
