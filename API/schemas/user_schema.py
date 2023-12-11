@@ -13,7 +13,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     password = fields.String(required=True)
     address = fields.String(required=True)
     is_admin = fields.Boolean(required=True)
-    user_balance = fields.Decimal(required=True, as_string=True)
+    user_balance = fields.Decimal(as_string=True)
 
     
 
