@@ -5,6 +5,7 @@ class Cart(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"),nullable=False, )
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+    total_value = db.Column(db.Numeric(10,2), nullable=False)
     cart_user = db.relationship("User", back_populates="cart")
     product = db.relationship("Product", backref="carts")
 
