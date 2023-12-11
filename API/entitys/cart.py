@@ -27,3 +27,11 @@ class Cart():
     @quantity.setter
     def quantity(self,quantity):
         self.__quantity = quantity
+    
+    @property
+    def total_value(self):
+        return self.__total_value
+    
+    @total_value.setter
+    def total_value(self,total_value):
+        self.__total_value = total_value
