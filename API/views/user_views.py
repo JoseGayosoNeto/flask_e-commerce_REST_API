@@ -54,6 +54,24 @@ class UserDetails_by_email(Resource):
         us = user_schema.UserSchema()
         return make_response(us.jsonify(user), 200)
 
+class Update_User_Balance(Resource):
+    def patch(self,id):
+        user = user_service.list_user_by_id(id)
+        if user is None:
+            return make_response(jsonify(f"User '{user.name} doesn't exist"), 404)
+        else:
+            us = user_schema.UserSchema(only=["user_balance"])
+            validate = us.validate(request.json)
+            if validate:
+                return make_response(jsonify(validate), 400)
+            
+            user_balance = request.json['user_balance']
+            user_service.update_balance(user, user_balance)
+            return make_response(us.jsonify(user), 200)
+            
+            
+
 api.add_resource(UserList,'/user')
 api.add_resource(UserDetails_by_id, '/user/<int:id>')
 api.add_resource(UserDetails_by_email, '/user/<string:email>')
+api.add_resource(Update_User_Balance, '/user/<int:id>/update_balance')
