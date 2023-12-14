@@ -7,9 +7,10 @@ from flask_restful import Resource
 from flask import make_response,jsonify,request
 from ..paginate import paginate
 from flask_jwt_extended import jwt_required
+from ..decorator import admin_required
 
 class UserList(Resource):
-    # Only for users that have is_admin = True
+    @admin_required
     def get(self):
         all_users = user_service.list_all_users()
         us = user_schema.UserSchema(many=True)
@@ -33,13 +34,13 @@ class UserList(Resource):
             return make_response(aux, 201)
 
 class UserDetails_by_id(Resource):
-    #Admin only
+    @admin_required
     def get(self,id):
         user = user_service.list_user_by_id(id)
         us = user_schema.UserSchema()
         return make_response(us.jsonify(user), 200)
     
-    #Admin only
+    @admin_required
     def delete(self,id):
         user = user_service.list_user_by_id(id)
         if user is None:
@@ -49,13 +50,13 @@ class UserDetails_by_id(Resource):
             return make_response(jsonify(f"User '{user.name}' sucessfully removed"), 200)
 
 class UserDetails_by_email(Resource):
-    #Admin only
+    @admin_required
     def get(self,email):
         user = user_service.list_user_by_email(email)
         us = user_schema.UserSchema()
         return make_response(us.jsonify(user), 200)
     
-    #Admin only
+    @admin_required
     def delete(sef,email):
         user = user_service.list_user_by_email(email)
         if user is None:
@@ -80,7 +81,7 @@ class Update_User_Balance(Resource):
             user_service.update_balance(user, user_balance)
             return make_response({"message": "User balance update sucessful.",
                                   "user_balance": user.user_balance
-                }, 200)
+                                }, 200)
             
             
 

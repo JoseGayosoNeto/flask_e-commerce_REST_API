@@ -8,9 +8,10 @@ from API import api,app
 from flask import make_response, jsonify, request
 from ..paginate import paginate
 from flask_jwt_extended import jwt_required
+from ..decorator import admin_required
 
 class ManageDetails(Resource):
-    #Admin only
+    @admin_required
     def get(self,id): # Get user cart by id
         user_cart = cart_service.list_cart_by_user(id)
         cs = cart_schema.CartSchema(many=True)

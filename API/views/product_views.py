@@ -8,6 +8,7 @@ from flask import request, make_response, jsonify
 import os
 from ..paginate import paginate
 from flask_jwt_extended import jwt_required
+from ..decorator import admin_required
 
 class ProductsList(Resource):
     @jwt_required()
@@ -16,7 +17,7 @@ class ProductsList(Resource):
         ps = product_schema.ProductSchema(many=True)
         return paginate(Product, ps)
 
-    #Admin only
+    @admin_required
     def post(self):
         ps = product_schema.ProductSchema()
         validate = ps.validate(request.json) # Performs the validation of data made in schema
@@ -43,7 +44,7 @@ class ProductDetails(Resource):
         ps = product_schema.ProductSchema()
         return make_response(ps.jsonify(product), 200)
 
-    #Admin only
+    @admin_required
     def put(self, id):
         old_product = product_service.list_product_by_id(id)
         if old_product is None:
@@ -65,7 +66,7 @@ class ProductDetails(Resource):
             updated_product = product_service.list_product_by_id(id)
             return make_response(ps.jsonify(updated_product), 200)
             
-    #Admin only
+    @admin_required
     def delete(self, id):
         product = product_service.list_product_by_id(id)
         if product is None:
