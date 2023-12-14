@@ -42,7 +42,7 @@ class UserDetails_by_id(Resource):
     def delete(self,id):
         user = user_service.list_user_by_id(id)
         if user is None:
-            return make_response(jsonify(f"User '{user.name}' doesn't exist "), 404)
+            return make_response(jsonify(f"User doesn't exist "), 404)
         else:
             user_service.delete_user(user)
             return make_response(jsonify(f"User '{user.name}' sucessfully removed"), 200)
@@ -53,6 +53,15 @@ class UserDetails_by_email(Resource):
         user = user_service.list_user_by_email(email)
         us = user_schema.UserSchema()
         return make_response(us.jsonify(user), 200)
+    
+    #Admin only
+    def delete(sef,email):
+        user = user_service.list_user_by_email(email)
+        if user is None:
+            return make_response(jsonify(f"User doesn't exist."), 404)
+        else:
+            user_service.delete_user(user)
+            return make_response(jsonify(f"User {user.name} sucessfully removed"), 200)
 
 class Update_User_Balance(Resource):
     def patch(self,id):
