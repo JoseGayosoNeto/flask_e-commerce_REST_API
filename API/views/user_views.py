@@ -78,6 +78,9 @@ class Update_User_Balance(Resource):
                 return make_response(jsonify(validate), 400)
             
             user_balance = request.json['user_balance']
+            if user_balance <= 0:
+                return make_response({"message": "The amount entered cannot be negative or zero. Please enter a valid amount to add to your account."})
+            
             user_service.update_balance(user, user_balance)
             return make_response({"message": "User balance update sucessful.",
                                   "user_balance": user.user_balance
