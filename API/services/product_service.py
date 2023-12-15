@@ -5,7 +5,7 @@ def register_product(product):
     product_bd = product_model.Product(product_name = product.product_name, 
                                         description = product.description, 
                                         quantity = product.quantity, 
-                                        regular_price = product.regular_price)
+                                        unit_price = product.unit_price)
     
     db.session.add(product_bd)
     db.session.commit()
@@ -23,7 +23,7 @@ def update_product(old_product, new_product):
     old_product.product_name = new_product.product_name
     old_product.description = new_product.description
     old_product.quantity = new_product.quantity
-    old_product.regular_price = new_product.regular_price
+    old_product.unit_price = new_product.unit_price
     db.session.commit()
 
 def remove_product(product):

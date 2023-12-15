@@ -6,7 +6,7 @@ class ProductSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = product_model.Product
         load_instance = True
-        fields = ("id", "product_name", "description", "quantity", "regular_price")
+        fields = ("id", "product_name", "description", "quantity", "unit_price")
 
     product_name = fields.String(required=True)
     description = fields.String(required=True)

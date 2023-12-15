@@ -18,6 +18,6 @@ class User(db.Model):
     def verify_password(self,password):
         return pbkdf2_sha256.verify(password,self.password)
 
-    def __repr__(self,name,email,address,is_admin):
+    def __repr__(self):
         return f"User('{self.name}', '{self.email}', '{self.address}', '{self.user_balance}', is_admin:'{self.is_admin}')"
 

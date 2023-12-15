@@ -27,10 +27,10 @@ class ProductsList(Resource):
             product_name = request.json['product_name']
             description = request.json['description']
             quantity = request.json['quantity']
-            regular_price = request.json['regular_price']
+            unit_price = request.json['unit_price']
 
             new_product = product.Product(product_name = product_name,description=description,
-                                            quantity=quantity,regular_price=regular_price)
+                                            quantity=quantity,unit_price=unit_price)
             result = product_service.register_product(new_product)
             aux = ps.jsonify(result)
             return make_response(aux, 201)
@@ -57,10 +57,10 @@ class ProductDetails(Resource):
             product_name = request.json['product_name']
             description = request.json['description']
             quantity = request.json['quantity']
-            regular_price = request.json['regular_price']
+            unit_price = request.json['unit_price']
 
             new_product = product.Product(product_name=product_name,description=description,
-                                            quantity=quantity,regular_price=regular_price)
+                                            quantity=quantity,unit_price=unit_price)
 
             product_service.update_product(old_product, new_product)
             updated_product = product_service.list_product_by_id(id)

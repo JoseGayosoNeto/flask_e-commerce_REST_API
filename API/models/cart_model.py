@@ -9,7 +9,7 @@ class Cart(db.Model):
     cart_user = db.relationship("User", back_populates="cart")
     product = db.relationship("Product", backref="carts")
 
-    def __repr__(self,product_id,quantity,user_id):
+    def __repr__(self):
         return f"Item('{self.product_id}', '{self.quantity}', User_id: '{self.user_id}')"
 
 from ..models import user_model

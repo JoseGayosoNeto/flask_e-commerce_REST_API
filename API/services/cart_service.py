@@ -12,7 +12,7 @@ def remove_cart_product(item):
 
 def insert_new_product_cart(item):
     item_data = product_service.list_product_by_id(item.product_id)
-    insert_item_cart = cart_model.Cart(user_id=item.user_id,product_id=item.product_id, quantity=item.quantity, total_value=(item.quantity*item_data.regular_price))
+    insert_item_cart = cart_model.Cart(user_id=item.user_id,product_id=item.product_id, quantity=item.quantity, total_value=(item.quantity*item_data.unit_price))
     db.session.add(insert_item_cart)
     db.session.commit()
     return insert_item_cart
@@ -27,6 +27,6 @@ def search_product_in_cart(user_id,product_id):
 
 def update_item_value(item):
     product = product_service.list_product_by_id(item.product_id)
-    item.total_value = item.quantity * product.regular_price
+    item.total_value = item.quantity * product.unit_price
     db.session.commit()
     

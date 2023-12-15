@@ -48,7 +48,7 @@ class ManageCart(Resource):
                         new_storage_product = Product(product_name=storage_product.product_name,
                                                     description=storage_product.description,
                                                     quantity=storage_product.quantity+item.quantity,
-                                                    regular_price=storage_product.regular_price)
+                                                    unit_price=storage_product.unit_price)
                                                     
                         product_service.update_product(storage_product,new_storage_product)
 
@@ -63,7 +63,7 @@ class ManageCart(Resource):
                     new_product = Product(product_name=old_product.product_name,
                                         description=old_product.description,
                                         quantity=old_product.quantity-quantity,
-                                        regular_price=old_product.regular_price)
+                                        unit_price=old_product.unit_price)
 
                     if new_product.quantity < 0:
                         return make_response(jsonify(f"Quantity of the product '{new_product.product_name}' in the cart exceeded the quantity in stock"), 400)
@@ -96,7 +96,7 @@ class ManageCart(Resource):
                     # Removing product quantity in store
                     old_product = product_service.list_product_by_id(product_id)
                     new_product = Product(product_name=old_product.product_name,description=old_product.description,
-                                        quantity=old_product.quantity-item.quantity,regular_price=old_product.regular_price)
+                                        quantity=old_product.quantity-item.quantity,unit_price=old_product.unit_price)
                     product_service.update_product(old_product,new_product)
                     cart_service.update_item_value(item)
 
