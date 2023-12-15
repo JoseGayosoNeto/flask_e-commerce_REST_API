@@ -6,7 +6,7 @@ from ..models.user_model import User
 from flask_restful import Resource
 from flask import make_response,jsonify,request
 from ..paginate import paginate
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
 from ..decorator import admin_required
 
 class UserList(Resource):
@@ -86,9 +86,20 @@ class Update_User_Balance(Resource):
                                   "user_balance": user.user_balance
                                 }, 200)
             
-            
+class YourUserDetails(Resource):
+
+    @jwt_required()
+    def get(self,id):
+        claims = get_jwt()
+        if claims['user_id'] == id:
+            user = user_service.list_user_by_id(id)
+            us = user_schema.UserSchema()
+            return make_response(us.jsonify(user), 200)
+        else:
+            return make_response({"message": "Acess Denied. User ID mismatch"})
 
 api.add_resource(UserList,'/user')
 api.add_resource(UserDetails_by_id, '/user/<int:id>')
 api.add_resource(UserDetails_by_email, '/user/<string:email>')
 api.add_resource(Update_User_Balance, '/user/<int:id>/update_balance')
+api.add_resource(YourUserDetails, '/user/<int:id>/details')
