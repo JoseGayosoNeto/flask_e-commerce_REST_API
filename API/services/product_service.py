@@ -29,3 +29,6 @@ def update_product(old_product, new_product):
 def remove_product(product):
     db.session.delete(product)
     db.session.commit()
+    
+def get_product_name_by_id(id):
+    return product_model.Product.query.filter_by(id=id).first().product_name
