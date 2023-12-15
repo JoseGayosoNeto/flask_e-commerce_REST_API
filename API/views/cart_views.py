@@ -7,7 +7,7 @@ from ..models.cart_model import Cart
 from API import api,app
 from flask import make_response, jsonify, request
 from ..paginate import paginate
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
 from ..decorator import admin_required
 
 class ManageDetails(Resource):
@@ -25,7 +25,8 @@ class ManageCart(Resource):
         if validate:
             return make_response(jsonify(validate), 400)
         else:
-            user_id = request.json['user_id']
+            claims = get_jwt()
+            user_id = claims['user_id']
             product_id = request.json['product_id']
             quantity = request.json['quantity']
 
@@ -99,7 +100,7 @@ class ManageCart(Resource):
                     product_service.update_product(old_product,new_product)
                     cart_service.update_item_value(item)
 
-                    cs = cart_schema.CartSchema(many=True)
+                    cs = cart_schema.CartSchema(many=True,only=("product_name", "quantity", "total_value"))
                     user_cart = cart_service.list_cart_by_user(id=user_id)
                     aux = cs.jsonify(user_cart)
                     return make_response(aux, 201)
