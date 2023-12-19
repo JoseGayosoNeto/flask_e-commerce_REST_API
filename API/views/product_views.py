@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from API import api,app
+from API import api
 from ..schemas import product_schema
 from ..entitys import product
 from ..services import product_service

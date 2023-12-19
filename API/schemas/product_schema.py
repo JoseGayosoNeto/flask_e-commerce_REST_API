@@ -11,4 +11,4 @@ class ProductSchema(ma.SQLAlchemyAutoSchema):
     product_name = fields.String(required=True)
     description = fields.String(required=True)
     quantity = fields.Integer(required=True)
-    regular_price = fields.Float(required=True)
+    unit_price = fields.Float(required=True)

@@ -3,10 +3,8 @@ from ..entitys import cart
 from ..entitys.product import Product
 from ..schemas import cart_schema
 from ..services import cart_service, product_service
-from ..models.cart_model import Cart
-from API import api,app
+from API import api
 from flask import make_response, jsonify, request
-from ..paginate import paginate
 from flask_jwt_extended import jwt_required, get_jwt
 from ..decorator import admin_required
 
