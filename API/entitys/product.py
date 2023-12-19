@@ -1,9 +1,9 @@
 class Product():
-    def __init__(self, product_name, description, quantity, regular_price):
+    def __init__(self, product_name, description, quantity, unit_price):
         self.__product_name = product_name
         self.__description = description
         self.__quantity = quantity
-        self.__regular_price = regular_price
+        self.__unit_price = unit_price
 
     @property
     def product_name(self):
@@ -31,9 +31,9 @@ class Product():
         self.__quantity = quantity
     
     @property
-    def regular_price(self):
-        return self.__regular_price
+    def unit_price(self):
+        return self.__unit_price
     
-    @regular_price.setter
-    def regular_price(self, regular_price):
-        self.__regular_price = regular_price
+    @unit_price.setter
+    def unit_price(self, unit_price):
+        self.__unit_price = unit_price
