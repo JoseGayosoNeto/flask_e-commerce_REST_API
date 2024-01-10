@@ -25,3 +25,7 @@ def delete_user(user):
 def update_balance(user, value):
     user.user_balance += Decimal(value)
     db.session.commit()
+    
+def complete_purchase(user, total_amount):
+    user.user_balance -= total_amount
+    db.session.commit()
