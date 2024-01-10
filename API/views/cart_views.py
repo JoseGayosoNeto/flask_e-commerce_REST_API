@@ -25,11 +25,9 @@ class ManageCart(Resource):
         else:
             claims = get_jwt()
             user_id = claims['user_id']
-            #product_id = request.json['product_id']
             product_name = request.json['product_name']
             quantity = request.json['quantity']
 
-            #product = product_service.list_product_by_id(product_id)
             product = product_service.list_product_by_name(product_name)
             if product is None:
                 return make_response(jsonify(message="Product doesn't exist"), 404)
