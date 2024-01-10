@@ -31,3 +31,10 @@ def update_transaction_status_to_cancelled(transaction):
 def delete_transaction(transaction):
     db.session.delete(transaction)
     db.session.commit()
+
+def list_transaction_by_transaction_id(id):
+    return transaction_model.Transaction.query.filter_by(id=id).first()    
+
+def is_logged_user_transaction(user_id,transaction_id):
+    is_logged_user_transaction = True if transaction_model.Transaction.query.filter_by(user_id=user_id,id=transaction_id).first() else False
+    return is_logged_user_transaction
