@@ -29,4 +29,7 @@ def update_item_value(item):
     product = product_service.list_product_by_id(item.product_id)
     item.total_value = item.quantity * product.unit_price
     db.session.commit()
-    
+
+def clean_user_cart(user):
+    db.session.query(cart_model.Cart).filter_by(user_id=user.id).delete()
+    db.session.commit()
