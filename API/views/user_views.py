@@ -1,18 +1,18 @@
 from API import api
-from ..entitys import user
-from ..schemas import user_schema
-from ..services import user_service
+from ..entitys import user, transaction
+from ..schemas import user_schema, transaction_schema
+from ..services import user_service, transaction_service
 from ..models.user_model import User
 from flask_restful import Resource
 from flask import make_response,jsonify,request
 from ..paginate import paginate
 from flask_jwt_extended import jwt_required, get_jwt
 from ..decorator import admin_required
+from ..models.enumerate import TransactionStatus
 
 class UserList(Resource):
     @admin_required
     def get(self):
-        all_users = user_service.list_all_users()
         us = user_schema.UserSchema(many=True)
         return paginate(User, us)
         
@@ -67,39 +67,60 @@ class UserDetails_by_email(Resource):
 
 class Update_User_Balance(Resource):
     @jwt_required()
-    def patch(self,id):
-        user = user_service.list_user_by_id(id)
+    def patch(self):
+        claims = get_jwt()
+        user_id = claims['user_id']
+        user = user_service.list_user_by_id(user_id)
         if user is None:
-            return make_response(jsonify(f"User '{user.name} doesn't exist"), 404)
+            return make_response(jsonify(f"User doesn't exist"), 404)
         else:
-            us = user_schema.UserSchema(only=["user_balance"])
+            us = user_schema.UserSchema(only=["amount_to_add"])
             validate = us.validate(request.json)
             if validate:
                 return make_response(jsonify(validate), 400)
             
-            user_balance = request.json['user_balance']
-            if user_balance <= 0:
-                return make_response({"message": "The amount entered cannot be negative or zero. Please enter a valid amount to add to your account."})
+            amount_to_add = request.json['amount_to_add']
+            if amount_to_add <= 0:
+                return make_response(jsonify(message="The amount entered cannot be negative or zero. Please enter a valid amount to add to your account."), 400)
             
-            user_service.update_balance(user, user_balance)
-            return make_response({"message": "User balance update sucessful.",
-                                  "user_balance": user.user_balance
-                                }, 200)
+            transaction_data = transaction.Transaction(user_id,amount_to_add, "Balance")
+            user_transaction = transaction_service.make_transaction(transaction_data)
+            if user_transaction is not None:
+                transaction_service.update_transaction_status_to_completed(user_transaction)
+                if user_transaction.status == TransactionStatus.COMPLETED:
+                    user_service.update_balance(user, amount_to_add)
+                    return make_response(jsonify({"message": "User balance update sucessful.",
+                                    "new_user_balance": user.user_balance
+                                    }), 200)
+                else:
+                    transaction_service.delete_transaction(user_transaction)
+                    return make_response(jsonify("Transaction could not be made."), 400)
+            transaction_service.update_transaction_status_to_cancelled(user_transaction)
+            return make_response(jsonify(message="Transaction failed."), 500)
             
 class YourUserDetails(Resource):
 
     @jwt_required()
-    def get(self,id):
+    def get(self):
         claims = get_jwt()
-        if claims['user_id'] == id:
-            user = user_service.list_user_by_id(id)
-            us = user_schema.UserSchema()
-            return make_response(us.jsonify(user), 200)
-        else:
-            return make_response({"message": "Acess Denied. User ID mismatch"})
+        user_id = claims['user_id']
+        user = user_service.list_user_by_id(user_id)
+        us = user_schema.UserSchema()
+        return make_response(us.jsonify(user), 200)
+
+class UserTransactionDetails(Resource):
+    
+    @jwt_required()
+    def get(self):
+        claims = get_jwt()
+        user_id = claims['user_id']
+        user_transactions = transaction_service.list_transactions_by_user_id(user_id)
+        ts = transaction_schema.TransactionSchema(many=True)
+        return make_response(ts.jsonify(user_transactions), 200)
 
 api.add_resource(UserList,'/user')
 api.add_resource(UserDetails_by_id, '/user/<int:id>')
 api.add_resource(UserDetails_by_email, '/user/<string:email>')
-api.add_resource(Update_User_Balance, '/user/<int:id>/update_balance')
-api.add_resource(YourUserDetails, '/user/<int:id>/details')
+api.add_resource(Update_User_Balance, '/user/update_balance')
+api.add_resource(YourUserDetails, '/user/details')
+api.add_resource(UserTransactionDetails, '/user/transactions')
