@@ -1,13 +1,13 @@
-from ..entitys import transaction
-from ..services import transaction_service, user_service, transactionItem_service
-from ..schemas import transaction_schema, transactionItem_schema
+from ..services import transaction_service, transactionItem_service
+from ..schemas import transaction_schema, transactionItemPurchase_schema
 from ..models.transaction_model import Transaction
 from API import api
-from flask import make_response,jsonify,request
+from flask import make_response,jsonify
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt
 from ..decorator import admin_required
 from ..paginate import paginate
+from ..models.enumerate import TransactionType
 
 class TransactionList(Resource):
     
@@ -28,8 +28,13 @@ class TransactionDetails(Resource):
         if is_logged_user_transaction == False:
             return make_response(jsonify("Transaction not found."), 404)
         transaction_items = transactionItem_service.list_transaction_by_id(transaction_id)
-        tis = transactionItem_schema.TransactionItemSchema(many=True)
-        return make_response(tis.jsonify(transaction_items), 200)
+        transaction = transaction_service.list_transaction_by_transaction_id(transaction_id)
+        if transaction.transaction_type == TransactionType.BALANCE:
+            ts = transaction_schema.TransactionSchema()
+            return make_response(ts.jsonify(transaction), 200)
+        else:
+            tis = transactionItemPurchase_schema.TransactionItemPurchaseSchema(many=True)
+            return make_response(tis.jsonify(transaction_items), 200)
         
         
 
