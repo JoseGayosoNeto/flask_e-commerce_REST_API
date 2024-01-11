@@ -3,7 +3,7 @@ from ..models import transaction_model
 from ..services import product_service, transaction_service
 from marshmallow import fields
 
-class TransactionItemSchema(ma.SQLAlchemyAutoSchema):
+class TransactionItemPurchaseSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = transaction_model.TransactionItem
         load_instance = True
