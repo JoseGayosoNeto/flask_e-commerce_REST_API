@@ -1,10 +1,10 @@
 # Flask E-commerce
 
-E-commerce Flask Project.
+E-commerce Flask API Project.
 
 ## Description
 
-This project is a simple e-commerce platform developed using Flask. It provides functionality for managing products, shopping carts, and order processing.
+This project is a simple e-commerce API developed using Flask. It provides functionality for managing products, shopping carts, and order processing.
 
 ## Getting Started
 
